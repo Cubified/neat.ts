@@ -15,17 +15,29 @@
     const engine = Matter.Engine.create();
     engine.timing.timeScale = 1.0;
 
+    let width = Math.min(window.innerWidth, 400);
+    let height = (600 / 400) * width;
     const renderer = Matter.Render.create({
       element: container,
       engine: engine,
       options: {
-        width: 400,
-        height: 600,
+        width,
+        height,
         showAngleIndicator: false,
         wireframes: false,
       }
     });
     renderer.context.textAlign = 'center';
+    window.addEventListener('resize', () => {
+      width = Math.min(window.innerWidth, 400);
+      height = (600 / 400) * width;
+
+      renderer.options.width = width;
+      renderer.options.height = height;
+      renderer.canvas.width = width;
+      renderer.canvas.height = height;
+      renderer.context.textAlign = 'center';
+    });
 
     Matter.Render.run(renderer);
 
@@ -109,7 +121,11 @@
           // const timeout = setTimeout(done, 10 * 1000);
           const callback = () => {
             renderer.context.fillStyle = 'white';
-            renderer.context.fillText(org.name, player.position.x, player.position.y + 20);
+            renderer.context.fillText(
+              org.name,
+              (width / 400) * player.position.x,
+              (height / 600) * player.position.y + 20
+            );
 
             const result = org.network.evaluate([
               player.position.y / 600,

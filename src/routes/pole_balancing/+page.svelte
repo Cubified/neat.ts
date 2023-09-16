@@ -14,17 +14,29 @@
     const engine = Matter.Engine.create();
     engine.timing.timeScale = 1.0;
 
+    let width = Math.min(window.innerWidth, 800);
+    let height = (600 / 800) * width;
     const renderer = Matter.Render.create({
       element: container,
       engine: engine,
       options: {
-        width: 800,
-        height: 600,
+        width,
+        height,
         showAngleIndicator: false,
         wireframes: false,
       }
     });
     renderer.context.textAlign = 'center';
+    window.addEventListener('resize', () => {
+      width = Math.min(window.innerWidth, 800);
+      height = (600 / 800) * width;
+
+      renderer.options.width = width;
+      renderer.options.height = height;
+      renderer.canvas.width = width;
+      renderer.canvas.height = height;
+      renderer.context.textAlign = 'center';
+    });
 
     Matter.Render.run(renderer);
 
@@ -85,7 +97,11 @@
           };
           const timeout = setTimeout(done, 10 * 1000);
           const callback = () => {
-            renderer.context.fillText(org.name, cart.position.x, cart.position.y + 20);
+            renderer.context.fillText(
+              org.name,
+              (width / 800) * cart.position.x,
+              (height / 600) * (cart.position.y + 20)
+            );
 
             const result = org.network.evaluate([
               cart.position.x / 800,

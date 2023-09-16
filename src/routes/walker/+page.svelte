@@ -22,26 +22,43 @@
         max: { x: left + 400, y: 600 }
       });
 
-      const n_blocks = renderer.canvas.width / 24;
-      const block_w = renderer.canvas.width / n_blocks;
+      const n_blocks = 800 / 24;
+      const block_w = 800 / n_blocks;
       const start = -renderer.bounds.min.x % (2 * block_w);
       renderer.context.fillStyle = 'rgba(255, 255, 255, 0.5)';
       for (let i = 0; i < n_blocks; i += 2) {
-        renderer.context.fillRect(start + (i * block_w), floor.position.y - 24, block_w, block_w);
+        renderer.context.fillRect(
+          (width / 800) * (start + (i * block_w)),
+          (height / 600) * (floor.position.y - 24),
+          block_w,
+          block_w
+        );
       }
     });
 
+    let width = Math.min(window.innerWidth, 800);
+    let height = (600 / 800) * width;
     const renderer = Matter.Render.create({
       element: container,
       engine: engine,
       options: {
-        width: 800,
-        height: 600,
+        width,
+        height,
         showAngleIndicator: false,
         wireframes: false,
       }
     });
     renderer.context.textAlign = 'center';
+    window.addEventListener('resize', () => {
+      width = Math.min(window.innerWidth, 800);
+      height = (600 / 800) * width;
+
+      renderer.options.width = width;
+      renderer.options.height = height;
+      renderer.canvas.width = width;
+      renderer.canvas.height = height;
+      renderer.context.textAlign = 'center';
+    });
 
     Matter.Render.run(renderer);
 
@@ -203,10 +220,14 @@
             clearTimeout(timeout);
             resolve(body.position.x);
           };
-          const timeout = setTimeout(done, 5 * 1000);
+          const timeout = setTimeout(done, 60 * 1000);
           const callback = () => {
             renderer.context.fillStyle = 'white';
-            renderer.context.fillText(org.name, body.position.x - renderer.bounds.min.x, body.position.y - 40);
+            renderer.context.fillText(
+              org.name,
+              (width / 800) * body.position.x - renderer.bounds.min.x,
+              (height / 600) * body.position.y - 40
+            );
 
             const result = org.network.evaluate([
               left_shin.position.x / 800,
@@ -232,7 +253,7 @@
               right_thigh, (result[3] - 0.5) / 20
             );
 
-            if (body.position.x < 0 || body.position.y > left_thigh.position.y || body.position.y > right_thigh.position.y) done();
+            if (body.position.x < 0 || body.position.y > left_thigh.position.y + 10 || body.position.y > right_thigh.position.y + 10) done();
           };
           const collide = (event: any) => {
             const pairs = event.pairs;
@@ -277,7 +298,7 @@
     padding-left: 20px;
     padding-right: 20px;
   }
-  @media only screen and (max-width: 800px) {
+  @media only screen and (max-width: 1400px) {
     .flex {
       display: block;
       padding: 0;

@@ -67,6 +67,7 @@
 <style>
   .parent {
     width: 600px;
+    max-width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -89,7 +90,20 @@
 
   table {
     width: 600px;
+    max-width: 100vw;
     height: 600px;
     table-layout: fixed;
+    overflow: hidden;
+  }
+  th, td {
+    word-wrap: break-word;
+  }
+  th:nth-child(5), td:nth-child(5) {
+    width: 100px;
+  }
+  @media only screen and (max-width: 1400px) {
+    .parent, table {
+      width: 100vw;
+    }
   }
 </style>
