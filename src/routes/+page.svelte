@@ -2,16 +2,16 @@
 <br />
 <div class="flex">
   <div class="item">
-    <img src="/pole.gif" alt="Pole balancing demo" width="400" height="300" />
-    <a href="/pole_balancing">Pole Balancing</a>
+    <img src="pole.gif" alt="Pole balancing demo" width="400" height="300" />
+    <a href="pole_balancing">Pole Balancing</a>
   </div>
   <div class="item">
-    <img src="/bird.gif" alt="Flappy Bird demo" width="400" height="300" />
-    <a href="/flappy_bird">Flappy Bird</a>
+    <img src="bird.gif" alt="Flappy Bird demo" width="400" height="300" />
+    <a href="flappy_bird">Flappy Bird</a>
   </div>
   <div class="item">
-    <img src="/walker.gif" alt="Walker demo" width="400" height="300" />
-    <a href="/walker">Biped Walker</a>
+    <img src="walker.gif" alt="Walker demo" width="400" height="300" />
+    <a href="walker">Biped Walker</a>
   </div>
 </div>
 
