@@ -7,7 +7,7 @@
   import { NEAT } from '$lib/neat';
 
   let container: HTMLDivElement;
-  let neat = new NEAT(4, 30, [8, 16, 4]);
+  let neat = new NEAT(4, 30, [12, 16, 4]);
   let currentSpecies = '';
 
   onMount(async () => {
@@ -70,7 +70,8 @@
       max: { x: 800, y: 600 }
     });
 
-    const floor = Matter.Bodies.rectangle(5000, 600, 10000, 50, {
+    const floor_w = 100000000;
+    const floor = Matter.Bodies.rectangle(floor_w / 2, 600, floor_w, 50, {
       isStatic: true,
       friction: 1,
       frictionStatic: 1000,
@@ -100,6 +101,7 @@
             friction: 1,
             frictionStatic: 1000,
             density: 1,
+            chamfer: 0.1 as Matter.IChamfer,
           });
           const left_shin = Matter.Bodies.rectangle(100, 500, 20, 70, {
             render,
@@ -107,6 +109,7 @@
             friction: 1,
             frictionStatic: 1000,
             density: 1,
+            chamfer: 0.1 as Matter.IChamfer,
           });
           const right_thigh = Matter.Bodies.rectangle(150, 450, 20, 70, {
             render,
@@ -114,6 +117,7 @@
             friction: 1,
             frictionStatic: 1000,
             density: 1,
+            chamfer: 0.1 as Matter.IChamfer,
           });
           const right_shin = Matter.Bodies.rectangle(150, 500, 20, 70, {
             render,
@@ -121,11 +125,13 @@
             friction: 1,
             frictionStatic: 1000,
             density: 1,
+            chamfer: 0.1 as Matter.IChamfer,
           });
-          const body = Matter.Bodies.rectangle(125, 400, 75, 50, {
+          const body = Matter.Bodies.rectangle(125, 400, 50, 50, {
             render,
             collisionFilter,
             density: 1,
+            frictionAir: 0.05,
           });
           const left_knee = Matter.Constraint.create({
             bodyA: left_shin,
@@ -225,35 +231,35 @@
             renderer.context.fillStyle = 'white';
             renderer.context.fillText(
               org.name,
-              (width / 800) * body.position.x - renderer.bounds.min.x,
-              (height / 600) * body.position.y - 40
+              (width / 800) * (body.position.x - renderer.bounds.min.x),
+              (height / 600) * (body.position.y - 40),
             );
 
+            const center = body.position;
+            const cmp = (bod: Matter.Body) => [
+              (((bod.position.x - center.x) / 200) + 1) / 2,
+              (((bod.position.y - center.y) / 200) + 1) / 2
+            ];
+            const clamp = (min: number, max: number, x: number) => Math.max(min, Math.min(max, x));
+            const ang = (bod: Matter.Body) => clamp(0, 1, ((bod.angle / (2 * Math.PI)) + 1) / 2);
             const result = org.network.evaluate([
-              left_shin.position.x / 800,
-              left_shin.position.y / 800,
-              left_thigh.position.x / 800,
-              left_thigh.position.y / 800,
-              right_shin.position.x / 800,
-              right_shin.position.y / 800,
-              right_thigh.position.x / 800,
-              right_thigh.position.y / 800,
+              ...cmp(left_shin),
+              ...cmp(left_thigh),
+              ...cmp(right_shin),
+              ...cmp(right_thigh),
+              ang(left_shin),
+              ang(left_thigh),
+              ang(right_shin),
+              ang(right_thigh),
             ]);
             Matter.Body.translate(body, { x: 4, y: 0 });
-            Matter.Body.setAngularVelocity(
-              left_shin, (result[0] - 0.5) / 20
-            );
-            Matter.Body.setAngularVelocity(
-              left_thigh, (result[1] - 0.5) / 20
-            );
-            Matter.Body.setAngularVelocity(
-              right_shin, (result[2] - 0.5) / 20
-            );
-            Matter.Body.setAngularVelocity(
-              right_thigh, (result[3] - 0.5) / 20
-            );
+            [left_shin, left_thigh, right_shin, right_thigh].forEach((x, i) => {
+              Matter.Body.setAngularVelocity(
+                x, clamp(-0.25, 0.25, (result[i] - 0.5) / 50)
+              );
+            });
 
-            if (body.position.x < 0 || body.position.y > left_thigh.position.y + 10 || body.position.y > right_thigh.position.y + 10) done();
+            if (body.position.x < 0) done();
           };
           const collide = (event: any) => {
             const pairs = event.pairs;

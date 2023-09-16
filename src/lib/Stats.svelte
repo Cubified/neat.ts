@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { NEAT, Species, Organism, Network } from '$lib/neat';
+  import type { NEAT, Species } from '$lib/neat';
 	import BestPerformer from '$lib/BestPerformer.svelte';
 
   export let neat: NEAT;
@@ -10,14 +10,16 @@
     species: Species;
   }
   let history: Array<HistoryItem> = [];
-  let left = 1;
+  let left = 0;
 
   $: {
-    history.unshift({
-      generation: neat.generation,
-      species: neat.species[0],
-    });
-    history = history;
+    if (neat.ancestors[neat.generation - 1]) {
+      history.unshift({
+        generation: neat.generation - 1,
+        species: neat.ancestors[neat.generation - 1][0],
+      });
+      history = history;
+    }
   }
 </script>
 
@@ -45,9 +47,9 @@
 
   <div class="row">
     <button
-      disabled={left <= 1}
+      disabled={left <= 0}
       on:click={() => {
-        if (left > 1) left -= n_view;
+        if (left > 0) left -= n_view;
       }}
     >
       Later
