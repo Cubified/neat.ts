@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+		<meta name="viewport" content="width=device-width" />
+    <style>
+      html, body {
+        padding: 0;
+      }
+    </style>
+		
+		<link href="./_app/immutable/assets/4.925c43b5.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/neat.e0f381f3.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.91d02efa.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.e108d1fd.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.c7b20c60.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.25795aad.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.a864fe6f.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.31f5cb8d.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/5.63821b73.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/neat.781449ad.js"><title>NEAT Demo: Biped Walker</title><!-- HEAD_svelte-wjynzk_START --><style data-svelte-h="svelte-1uct9xx">body {
+      max-width: unset;
+    }
+  </style><!-- HEAD_svelte-wjynzk_END -->
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">  <h1 class="svelte-4s2i8h" data-svelte-h="svelte-1o6g869">NEAT Demo: Biped Walker</h1> <div class="flex svelte-4s2i8h"><div class="view svelte-4s2i8h"><div></div> <p>Generation: <b>0</b><br>Species: <b></b></p></div> <div class="parent svelte-1d2asj6"><table class="svelte-1d2asj6"><tr data-svelte-h="svelte-112uk25"><th>Generation</th> <th>Best Species</th> <th>Best Organism</th> <th>Best Fitness</th> <th>Network</th></tr> </table> <div class="row svelte-1d2asj6"><button disabled class="svelte-1d2asj6">Later</button> <div class="spacer svelte-1d2asj6"></div> <button disabled class="svelte-1d2asj6">Earlier</button></div> </div></div>   
+			
+			<script>
+				{
+					__sveltekit_mpcv91 = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.91d02efa.js"),
+						import("./_app/immutable/entry/app.25795aad.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
