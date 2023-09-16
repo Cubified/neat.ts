@@ -14,6 +14,23 @@
     const engine = Matter.Engine.create();
     engine.timing.timeScale = 2.0;
 
+    const bodies: Array<Matter.Body> = [];
+    Matter.Events.on(engine, 'beforeUpdate', () => {
+      let left = bodies.reduce((prev, next) => Math.max(prev, next.position.x), 400);
+      Matter.Render.lookAt(renderer, {
+        min: { x: left - 400, y: 0 },
+        max: { x: left + 400, y: 600 }
+      });
+
+      const n_blocks = renderer.canvas.width / 24;
+      const block_w = renderer.canvas.width / n_blocks;
+      const start = -renderer.bounds.min.x % (2 * block_w);
+      renderer.context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      for (let i = 0; i < n_blocks; i += 2) {
+        renderer.context.fillRect(start + (i * block_w), floor.position.y - 24, block_w, block_w);
+      }
+    });
+
     const renderer = Matter.Render.create({
       element: container,
       engine: engine,
@@ -36,7 +53,7 @@
       max: { x: 800, y: 600 }
     });
 
-    const floor = Matter.Bodies.rectangle(400, 600, 800, 50, {
+    const floor = Matter.Bodies.rectangle(5000, 600, 10000, 50, {
       isStatic: true,
       friction: 1,
       frictionStatic: 1000,
@@ -175,11 +192,13 @@
             right_hip,
           ]);
           Matter.Composite.add(engine.world, parent);
+          bodies.push(body);
 
           const done = () => {
             Matter.Composite.remove(engine.world, parent);
             Matter.Events.off(engine, 'beforeUpdate', callback);
             Matter.Events.off(engine, 'collisionStart', collide);
+            bodies.splice(bodies.indexOf(body), 1);
 
             clearTimeout(timeout);
             resolve(body.position.x);
@@ -187,7 +206,7 @@
           const timeout = setTimeout(done, 5 * 1000);
           const callback = () => {
             renderer.context.fillStyle = 'white';
-            renderer.context.fillText(org.name, body.position.x, body.position.y - 40);
+            renderer.context.fillText(org.name, body.position.x - renderer.bounds.min.x, body.position.y - 40);
 
             const result = org.network.evaluate([
               left_shin.position.x / 800,
@@ -199,6 +218,7 @@
               right_thigh.position.x / 800,
               right_thigh.position.y / 800,
             ]);
+            Matter.Body.translate(body, { x: 4, y: 0 });
             Matter.Body.setAngularVelocity(
               left_shin, (result[0] - 0.5) / 20
             );

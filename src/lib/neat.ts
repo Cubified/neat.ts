@@ -8,11 +8,10 @@ const rand_choice = (arr: Array<string>) => arr[rand_int(0, arr.length)];
 const rand_organism = () => rand_choice(names).toLowerCase();
 const rand_species = () => `${rand_choice(adjectives)} ${rand_choice(nouns)}`;
 
-// const sigmoid = (x: number) => (Math.exp(x) / (Math.exp(x) + 1));
 const relu = (x: number) => Math.max(0, x);
+// const sigmoid = (x: number) => (Math.exp(x) / (Math.exp(x) + 1));
 // const softplus = (x: number) => Math.log(1 + Math.exp(x)) / Math.log(Math.E);
 // const ALL_ACTIVATIONS = [sigmoid, relu, softplus];
-const DEFAULT_ACTIVATIONS = [relu, relu, relu];
 
 class Node {
   weights: Array<number>;
@@ -248,7 +247,7 @@ class NEAT {
     this.ancestors = [];
     this.species_size = species_size;
     this.layer_counts = layer_counts;
-    this.activations = activations ?? DEFAULT_ACTIVATIONS;
+    this.activations = activations ?? layer_counts.map(() => relu);
     for (let i = 0; i < species_count; i++) {
       this.species[i] = new Species(species_size, layer_counts, this.activations);
     }
